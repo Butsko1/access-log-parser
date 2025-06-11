@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class Main {
@@ -15,13 +17,43 @@ public class Main {
                 continue;
             }
             if(fileExists){
-                count++;
-                System.out.println("Это файл номер " + count);
-                continue;
+                int countOfStrings = 0;
+                int min = Integer.MAX_VALUE;
+                int max = Integer.MIN_VALUE;
+                try {
+                    FileReader fileReader = new FileReader(path);
+                    BufferedReader reader =
+                            new BufferedReader(fileReader);
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        countOfStrings++;
+                        int length = line.length();
+                        if(length > 1024){
+                            throw new ToLongException("Длина строки номер " + countOfStrings + " превышает 1024 символа");
+                        }
+                        if(length > max){
+                            max = length;
+                        }
+                        if(length < min){
+                            min = length;
+                        }
+                    }
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
+                finally {
+                    System.out.println("Общее количество строк: " + countOfStrings);
+                    System.out.println("Максимальная длина строки: " + max);
+                    System.out.println("Минимальная длина строки: " + min);
+                }
+
             }
             if(!fileExists){
                 System.out.println("По указанному пути ничего не найдено. Попробуйте еще раз.");
             }
+
+
         }
     }
 }
