@@ -18,34 +18,46 @@ public class Main {
             }
             if(fileExists){
                 int countOfStrings = 0;
-                int min = Integer.MAX_VALUE;
-                int max = Integer.MIN_VALUE;
+                int yandexBotCount = 0;
+                int googleBotCount = 0;
                 try {
                     FileReader fileReader = new FileReader(path);
                     BufferedReader reader =
                             new BufferedReader(fileReader);
                     String line;
+
                     while ((line = reader.readLine()) != null) {
                         countOfStrings++;
                         int length = line.length();
                         if(length > 1024){
                             throw new ToLongException("Длина строки номер " + countOfStrings + " превышает 1024 символа");
                         }
-                        if(length > max){
-                            max = length;
+                        String[] components = line.split(" \"");
+                        String[] parts = components[3].split(";");
+                        if (parts.length >= 2) {
+                            String fragment = parts[1].trim();
+                            try{
+                                fragment = fragment.substring(0,fragment.indexOf("/"));
+                                if(fragment.equals("YandexBot")){
+                                    yandexBotCount++;
+                                }
+                                else if (fragment.equals("Googlebot")) {
+                                    googleBotCount++;
+                                }
+                            }
+                            catch (StringIndexOutOfBoundsException e){
+                            }
+
                         }
-                        if(length < min){
-                            min = length;
-                        }
+
                     }
                 }
                 catch (Exception ex){
                     ex.printStackTrace();
                 }
                 finally {
-                    System.out.println("Общее количество строк: " + countOfStrings);
-                    System.out.println("Максимальная длина строки: " + max);
-                    System.out.println("Минимальная длина строки: " + min);
+                    System.out.println("YandexBot: " + yandexBotCount);
+                    System.out.println("Googlebot: " + googleBotCount);
                 }
 
             }
