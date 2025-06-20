@@ -17,9 +17,9 @@ public class Main {
                 continue;
             }
             if(fileExists){
-                int countOfStrings = 0;
-                int yandexBotCount = 0;
-                int googleBotCount = 0;
+                double countOfStrings = 0;
+                double yandexBotCount = 0;
+                double googleBotCount = 0;
                 try {
                     FileReader fileReader = new FileReader(path);
                     BufferedReader reader =
@@ -56,8 +56,8 @@ public class Main {
                     ex.printStackTrace();
                 }
                 finally {
-                    System.out.println("YandexBot: " + yandexBotCount);
-                    System.out.println("Googlebot: " + googleBotCount);
+                    System.out.println("Доля YandexBot: " + yandexBotCount / countOfStrings);
+                    System.out.println("Доля Googlebot: " + googleBotCount / countOfStrings);
                 }
 
             }
