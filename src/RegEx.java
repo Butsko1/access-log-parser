@@ -10,6 +10,7 @@ public class RegEx {
     static  Pattern refererPattern = Pattern.compile("\\d \"(.*?)\"");
     static  Pattern browserPattern = Pattern.compile("\\d \".*?\" \"(Chrome|Mozilla|Edge|Opera)/");
     static  Pattern osPattern = Pattern.compile("/\\d.\\d \\((Windows|macOS|Linux);");
+    static Pattern isBotPattern = Pattern.compile("\\(.*Bot.*\\)");
 
     public static String returnIp(String s){
         Matcher matcher = ipAddrPattern.matcher(s);
@@ -81,6 +82,13 @@ public class RegEx {
             return matcher.group(1);
         }
         return "ОС не определена";
+    }
+    public static boolean returnIsBot(String s){
+        Matcher matcher = isBotPattern.matcher(s);
+        if(matcher.find()){
+            return true;
+        }
+        return false;
     }
 
     public enum Browsers{
