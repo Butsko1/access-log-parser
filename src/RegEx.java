@@ -11,6 +11,7 @@ public class RegEx {
     static  Pattern browserPattern = Pattern.compile("\\d \".*?\" \"(Chrome|Mozilla|Edge|Opera)/");
     static  Pattern osPattern = Pattern.compile("/\\d.\\d \\((Windows|macOS|Linux);");
     static Pattern isBotPattern = Pattern.compile("\\(.*Bot.*\\)");
+    static  Pattern refererPagePattern = Pattern.compile("//(.*?)/");
 
     public static String returnIp(String s){
         Matcher matcher = ipAddrPattern.matcher(s);
@@ -89,6 +90,14 @@ public class RegEx {
             return true;
         }
         return false;
+    }
+
+    public static String returnPageReferer(String s){
+        Matcher matcher = refererPagePattern.matcher(s);
+        if(matcher.find()){
+            return matcher.group(1).trim();
+        }
+        return "Страница перехода не определена";
     }
 
     public enum Browsers{

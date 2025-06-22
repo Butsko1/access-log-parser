@@ -21,6 +21,10 @@ public class LogEntry {
         return time;
     }
 
+    public int getSec(){
+        return this.time.getSecond();
+    }
+
     public String getIpAddr() {
         return ipAddr;
     }

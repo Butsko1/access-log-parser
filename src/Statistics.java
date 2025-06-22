@@ -1,8 +1,10 @@
+import com.sun.source.tree.UsesTree;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Statistics {
     private long totalTraffic;
@@ -15,6 +17,10 @@ public class Statistics {
     private long visitsByNormalBrowser;
     private long errorRequests;
     private HashSet<String> uniqueUsers;
+    private HashMap<Integer, Integer> peekSec;
+    private HashSet<String> referers;
+    private HashMap<String, Integer> userVisits;
+
     public Statistics(){
         this.totalTraffic = 0;
         this.max_time = LocalDateTime.MIN;
@@ -26,6 +32,9 @@ public class Statistics {
         this.visitsByNormalBrowser = 0;
         this.errorRequests = 0;
         this.uniqueUsers = new HashSet<>();
+        this.peekSec = new HashMap();
+        this.referers = new HashSet<>();
+        this.userVisits = new HashMap<>();
     }
 
 
@@ -61,7 +70,28 @@ public class Statistics {
         if(!logEntry.getUserAgent().getIsBot()){
             this.visitsByNormalBrowser++;
             this.uniqueUsers.add(logEntry.getIpAddr());
+
+            if(!this.peekSec.containsKey(logEntry.getSec())){
+                this.peekSec.put(logEntry.getSec(), 1);
+            }
+            else{
+                this.peekSec.put(logEntry.getSec(), (this.peekSec.get(logEntry.getSec())+1));
+            }
+            if(!logEntry.getReferer().equals("Страница перехода не определена") && !logEntry.getReferer().equals("-")){
+                this.referers.add(RegEx.returnPageReferer(logEntry.getReferer()));
+            }
+
+            if(!this.userVisits.containsKey(logEntry.getIpAddr())){
+                this.userVisits.put(logEntry.getIpAddr(), 1);
+            }
+            else{
+                this.userVisits.put(logEntry.getIpAddr(), (this.userVisits.get(logEntry.getIpAddr())+1));
+            }
         }
+
+
+
+
 
     }
     public double getTrafficRate(){
@@ -142,6 +172,40 @@ public class Statistics {
         }
 
     }
+
+    public String getMaxSecVisits(){
+        int max = Integer.MIN_VALUE;
+        int k = 0;
+        int v = 0;
+        for(Map.Entry<Integer, Integer> entry: this.peekSec.entrySet()){
+            if(entry.getValue() > max){
+                max = entry.getValue();
+                k = entry.getKey();
+                v = entry.getValue();
+            }
+        }
+        return "Секунда:" + k + ". Количество посещений: " + v;
+    }
+
+    public HashSet<String> getReferersPages(){
+        return this.referers;
+    }
+
+    public String getMaxUserVisits(){
+        int max = Integer.MIN_VALUE;
+        String k = "";
+        int v = 0;
+        for(Map.Entry<String, Integer> entry: this.userVisits.entrySet()){
+            if(entry.getValue() > max){
+                max = entry.getValue();
+                k = entry.getKey();
+                v = entry.getValue();
+            }
+        }
+        return "Пользователь: " + k + ". Количество посещений:" + v;
+    }
+
+
 
 
 }
