@@ -162,10 +162,10 @@ public class Statistics {
 
     }
 
-    public double getUniqueVisitsPerHour(){
+    public double getAveragePartOfRequestsByUniqUser(){
 
         try{
-            return this.uniqueUsers.size()/getDuration();
+            return this.visitsByNormalBrowser/this.uniqueUsers.size();
         }
         catch (ArithmeticException ex){
             return this.uniqueUsers.size(); //На случай, если одна запись или все записи в течении одного часа
